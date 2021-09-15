@@ -12,13 +12,15 @@ const axiosInstance = axios.create({
 export const createBrowser = async (
   kioskMode= false,
   incognitoMode= false,
-  browserURL="https://webex.com",
+  browserURL,
 ) => { 
 
   try {
-    return await axiosInstance.post('/remoteHQ/cb', {
-      kioskMode, incognitoMode, browserURL
+    const {data: {data: {embedURL, instanceURN}}} = await axiosInstance.post('/remoteHQ/cb', {
+      kioskMode, incognitoMode, browserURL, resolution: "mobile"
     });
+
+    return `${embedURL}?iframeSource=arash-cisco`;
   } catch (error) {
     console.log(error);
   }
