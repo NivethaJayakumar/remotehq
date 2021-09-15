@@ -1,5 +1,17 @@
-@import "https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css";
 
 .App {
   height: 100vh;
+}
+
+
+body {
+  background-color: #f4f5fc;
+}
+
+#main {
+  min-width: 320px;
+}
+
+.nowrap {
+  white-space: nowrap;
 }
