@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {createBrowser, removeBrowser} from './remoteHQ';
-import logo from './remoteHQ.svg';
+import SVG from './SVG';
+import {appShareStateUpdateEvent, appThemeUpdateEvent} from './EmbeddedAppSDK';
 import "./Browser.css"; 
 
 const Browser = (props) => {
@@ -11,21 +12,26 @@ const Browser = (props) => {
   const [edit,setToEdit]=useState(false);
   const [incognito,setToIncognito]=useState(false);
   const [lightTheme, setLightTheme] = useState(true);
+  const [hostView, setHostView] = useState(true);
 
   useEffect(() => {
     if(window.location.search) {
       console.log('participant view');
-
+      setHostView(false);
       const browserURL = decodeURIComponent(window.location.search).replace('?embedURL=', '');
       
       embeddedAppSDK.getUser().then(({displayName}) => {
         setFrameURL(`${browserURL}&userName=${displayName}`)
-      }).catch((error) => {
-        console.log(error)
       });
+
     } else {
       console.log('host view');
     }
+
+    embeddedAppSDK.listen(() => {
+      embeddedAppSDK.subscribe(appThemeUpdateEvent, updateTheme);
+      embeddedAppSDK.subscribe(appShareStateUpdateEvent, handleShare);
+    });
   })
 
   const handleData = async (e) => {
@@ -50,6 +56,22 @@ const Browser = (props) => {
     embeddedAppSDK.shareApp(`https://remotehq.ngrok.io?embedURL=${embedURL}&role=${role}`);
   };
   
+  const updateTheme = (payload) => {
+    if(payload === 'LIGHT') {
+      setLightTheme(true);
+    } else {
+      setLightTheme(false);
+    }
+  };
+ 
+  const handleShare = (payload) => {
+    if(hostView) {
+      if(!payload) {
+        // show the pop-up!!!
+      }
+    }
+  }
+
   const iframe = <div>
     <div>
     <button
@@ -89,22 +111,22 @@ const Browser = (props) => {
     </div>
   </div>
   const form = <div id="main"
-  className="min-h-screen flex items-center justify-center bg-purple-50 py-12 px-12 sm:px-6 lg:px-8" >
+  className="min-h-screen flex items-center justify-center bg-purple-50 dark:bg-gray-800 py-12 px-12 sm:px-6 lg:px-8">
   <div className="max-w-md w-full space-y-12">
     <div>
-      <img className="mx-auto h-12 w-auto" src={logo} alt="RemoteHQ" />
-      <h2 className="mt-6 text-center text-3l font-extrabold text-gray-900">
+      <SVG lightTheme={lightTheme} />
+      <h2 className="mt-6 text-center text-2xl font-extrabold text-gray-900 dark:text-white">
         <span className="nowrap">
           Browse <span className="text-purple-600">privately</span>.
-        </span>
+        </span>&nbsp;
         <span className="nowrap">
           Browse <span className="text-purple-600">together</span>.
-        </span>
-        <span className="nowrap">
+        </span>&nbsp;
+        <span >
           Browse <span className="text-purple-600">faster</span>.
         </span>
       </h2>
-      <p className="mt-2 text-center text-sm text-gray-600">
+      <p className="mt-2 text-center text-sm text-gray-600 dark:text-white">
         Start web browsing now as a team by setting up a co-browsing session
         below.
       </p>
@@ -113,7 +135,7 @@ const Browser = (props) => {
       <input type="hidden" name="remember" value="true" />
       <div className="rounded-md shadow-sm -space-y-px">
         <div>
-          <label for="url" className="block text-sm font-medium text-gray-700">
+          <label for="url" className="block text-sm font-medium text-gray-700 dark:text-white">
             URL
           </label>
           <input
@@ -135,15 +157,15 @@ const Browser = (props) => {
               id="enable-edits"
               name="enable-edits"
               type="checkbox"
-              className="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300 rounded"
+              className="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300 rounded "
               onChange={(e)=>setToEdit(e.target.checked)}
             />
           </div>
           <div className="ml-3 text-sm">
-            <label for="enable-edits" className="font-medium text-gray-700"
+            <label for="enable-edits" className="font-medium text-gray-700 dark:text-white"
               >Enable Edits</label
             >
-            <p className="text-gray-500">
+            <p className="text-gray-400">
               Allow other participants to edit the URL
             </p>
           </div>
@@ -159,10 +181,10 @@ const Browser = (props) => {
             />
           </div>
           <div className="ml-3 text-sm">
-            <label for="incognito-mode" className="font-medium text-gray-700"
+            <label for="incognito-mode" className="font-medium text-gray-700 dark:text-white"
               >Incognito Mode</label
             >
-            <p className="text-gray-500">
+            <p className="text-gray-400">
               Use a private browser session
             </p>
           </div>
@@ -196,7 +218,7 @@ const Browser = (props) => {
   </div>
 </div>;
 
-  return <div>
+  return <div className={`${!lightTheme && "dark"}`}>
     {!frameURL ? form : iframe}
   </div>
 };

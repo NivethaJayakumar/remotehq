@@ -1,23 +1,44 @@
 
-const appContextUpdateEvent = 'application:displayContextChanged'; 
-const appShareStateUpdateEvent = 'application:shareStateChanged';
-const appThemeUpdateEvent = 'application:themeChanged';
-const meetingInfoUpdateEvent = 'meeting:infoChanged';
-const meetingRoleUpdateEvent = 'meeting:roleChanged';
-const spaceInfoUpdateEvent = 'space:infoChanged';
+export const appContextUpdateEvent = 'application:displayContextChanged'; 
+export const appShareStateUpdateEvent = 'application:shareStateChanged';
+export const appThemeUpdateEvent = 'application:themeChanged';
+export const meetingInfoUpdateEvent = 'meeting:infoChanged';
+export const meetingRoleUpdateEvent = 'meeting:roleChanged';
+export const spaceInfoUpdateEvent = 'space:infoChanged';
 
 export default class EmbeddedAppSDK {
   constructor() {
     this.app = new window.Webex.Application();
   }
 
-  subscribe(callback) {
-    this.app.listen(appContextUpdateEvent, (payload) => {callback(payload)});
-    this.app.listen(appShareStateUpdateEvent, (payload) => {callback(payload)});
-    this.app.listen(appThemeUpdateEvent, (payload) => {callback(payload)});
-    this.app.listen(meetingInfoUpdateEvent, (payload) => {callback(payload)});
-    this.app.listen(meetingRoleUpdateEvent, (payload) => {callback(payload)});
-    this.app.listen(spaceInfoUpdateEvent, (payload) => {callback(payload)});
+  async listen() {
+    await this.app.listen();
+  }
+
+  subscribe(eventName, callback) {
+    switch(eventName) {
+      case appContextUpdateEvent:
+        this.app.on(appContextUpdateEvent, callback);
+        break;
+      case appShareStateUpdateEvent:
+        this.app.on(appShareStateUpdateEvent, callback);
+        break;
+      case appThemeUpdateEvent:
+        this.app.on(appThemeUpdateEvent, callback);
+        break;
+      case meetingInfoUpdateEvent:
+        this.app.on(meetingInfoUpdateEvent, callback);
+
+      break;
+      case meetingRoleUpdateEvent:
+        this.app.on(meetingRoleUpdateEvent, callback);
+        break;
+      case spaceInfoUpdateEvent:
+        this.app.on(spaceInfoUpdateEvent, callback);
+        break;
+      default:
+        break;
+    }
   }
 
   async onReady() {
