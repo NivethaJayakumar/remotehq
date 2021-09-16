@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {createBrowser, removeBrowser} from './remoteHQ';
 import SVG from './SVG';
+import Avatars from './Avatars';
 import {appShareStateUpdateEvent, appThemeUpdateEvent} from './EmbeddedAppSDK';
 import "./Browser.css"; 
 
@@ -121,12 +122,17 @@ const Browser = (props) => {
           />
         </svg>
       </span>
-      Start a new Browsing session
+      Start New Session
     </button>;
+
+  const header = <div>
+    {shareButton}
+    <Avatars />
+  </div>;
 
   const iframe = <div>
     <div>
-    {hostView && shareButton}
+    {hostView && header}
     </div>
     <div>
       <iframe
