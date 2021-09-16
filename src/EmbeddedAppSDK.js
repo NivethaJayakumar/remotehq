@@ -11,11 +11,9 @@ export default class EmbeddedAppSDK {
     this.app = new window.Webex.Application();
   }
 
-  async listen() {
-    await this.app.listen();
-  }
+ async subscribe(eventName, callback) {
+   await this.app.listen();
 
-  subscribe(eventName, callback) {
     switch(eventName) {
       case appContextUpdateEvent:
         this.app.on(appContextUpdateEvent, callback);
@@ -28,8 +26,7 @@ export default class EmbeddedAppSDK {
         break;
       case meetingInfoUpdateEvent:
         this.app.on(meetingInfoUpdateEvent, callback);
-
-      break;
+        break;
       case meetingRoleUpdateEvent:
         this.app.on(meetingRoleUpdateEvent, callback);
         break;
@@ -39,6 +36,10 @@ export default class EmbeddedAppSDK {
       default:
         break;
     }
+  }
+
+  getTheme() {
+    return this.app.theme;
   }
 
   async onReady() {
