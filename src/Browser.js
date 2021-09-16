@@ -146,17 +146,7 @@ const Browser = (props) => {
   <div className="max-w-md w-full space-y-12">
     <div>
       <SVG lightTheme={lightTheme} />
-      <h2 className="mt-6 text-center text-2xl font-extrabold text-gray-900 dark:text-white">
-        <span className="nowrap">
-          Browse <span className="text-purple-600">privately</span>.
-        </span>&nbsp;
-        <span className="nowrap">
-          Browse <span className="text-purple-600">together</span>.
-        </span>&nbsp;
-        <span >
-          Browse <span className="text-purple-600">faster</span>.
-        </span>
-      </h2>
+      <h2 className="mt-6 text-center text-2xl font-extrabold text-gray-900 dark:text-white"><span class="nowrap">Browse <span class="text-purple-600">privately</span></span>. <span class="nowrap">Browse <span class="text-purple-600">together</span></span>. <span class="nowrap">Browse <span class="text-purple-600">faster</span></span>.</h2>
       <p className="mt-2 text-center text-sm text-gray-600 dark:text-white">
         Start web browsing now as a team by setting up a co-browsing session
         below.
